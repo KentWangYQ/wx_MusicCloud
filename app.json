@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/favo/favo",
+    "pages/kuwo/kuwo"
+  ],
+  "window": {
+    "backgroundColor": "#555555",
+    "navigationBarBackgroundColor": "#555555",
+    "navigationBarTitleText": "音乐魔盒"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/favo/favo",
+        "text": "收藏",
+        "iconPath": "image/qqmusic.jpg",
+        "selectedIconPath": "image/qqmusic.jpg"
+      },
+      {
+        "pagePath": "pages/kuwo/kuwo",
+        "text": "kuwo",
+        "iconPath": "image/kuwo.jpg",
+        "selectedIconPath": "image/kuwo.jpg"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true
+}

@@ -1,0 +1,34 @@
+/* pages/kuwo/kuwo.wxss */
+
+.img_audio {
+  width: 60px;
+  height: 60px;
+  float: left;
+}
+
+ .audio_text,.audio_text_m{
+  font-size: 12px;
+  padding-left: 10px;
+} 
+.audio_text_m{
+  font-weight: bold;
+}
+
+.img_audio {
+  width: 60px;
+  height: 60px;
+}
+
+.myAudio1 {
+  width: 100%;
+}
+
+.ipt_search {
+  float: left;
+  padding: 10px 0 0 5px;
+}
+
+.ico_search {
+  /*float: left;*/
+  padding: 15px 0 0 5px;
+}

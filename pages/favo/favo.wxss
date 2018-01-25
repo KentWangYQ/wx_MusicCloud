@@ -1,0 +1,86 @@
+/* pages/qqmusic/qqmusic.wxss */
+
+.view_songlist {
+  margin-bottom: 60px;
+}
+
+.view_songlist_item {
+  margin: 10px 10px 0 10px;
+  padding-bottom: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #ddd;
+}
+
+.songlist_text {
+  font-size: 12px;
+  color: #666;
+  padding-right: 10px;
+}
+
+.songlist_img_del {
+  width: 20px;
+  height: 20px;
+  float: right;
+  padding-right: 10px;
+}
+
+.view_audio {
+  width: 100%;
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #ddd;
+  background-color: #eee;
+}
+
+.view_audio_img {
+  float: left;
+}
+
+.view_audio_info {
+  float: left;
+  width: 50%;
+}
+
+.view_audio_play {
+  float: right;
+  width: 70px;
+  padding: 20px 10px 0 10px;
+}
+
+.img_audio {
+  width: 60px;
+  height: 60px;
+  float: left;
+  border-radius: 50%;
+}
+
+.view_audio_info_name {
+  width: 100%;
+  height: 15px;
+  float: left;
+  padding: 10px 10px 0 10px;
+}
+
+.audio_text_m {
+  font-size: 14px;
+  font-weight: bold;
+}
+.view_audio_info_other{
+  width: 100%;
+  float: left;
+  padding: 5px 10px 0 10px;
+}
+.audio_text {
+  font-size: 12px;
+}
+
+.audio_play{
+  width: 20px;
+  height: 20px;
+  padding-left: 15px;
+}

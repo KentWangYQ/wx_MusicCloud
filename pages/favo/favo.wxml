@@ -1,0 +1,28 @@
+<scroll-view class='view_songlist'>
+  <view class='view_songlist_item' wx:for="{{favoSongList}}" wx:key="musicRid">
+    <text class='songlist_text_m' bindtap='txt_name_tap' data-musicrid="{{item.musicRid}}">{{item.songName}}</text>
+    <view></view>
+    <text class='songlist_text'>{{item.album}}</text>
+    <text class='songlist_text'>{{item.author}}</text>
+    <image class='songlist_img_del' src='../../image/del.jpg' bindtap='img_del_tap' data-musicrid="{{item.musicRid}}"></image>
+  </view>
+</scroll-view>
+<view class='view_audio'>
+  <view class='view_audio_img'>
+    <!-- <image class='img_audio' src='{{audio.image}}'></image> -->
+    <image class='img_audio' src='{{audio.image}}' animation='{{animationData}}'></image>
+  </view>
+  <view class='view_audio_info'>
+    <view class='view_audio_info_name'>
+      <text class='audio_text_m'>{{audio.songName}}</text>
+    </view>
+    <view class='view_audio_info_other'>
+    <text class='audio_text'>{{audio.album}}</text>
+    <text class='audio_text'>{{audio.author}}</text>
+    </view>
+  </view>
+  <view class='view_audio_play'>
+    <image class='audio_play' src='{{audio.ico.play}}' bindtap='play_tap'></image>
+    <image class='audio_play' src='{{audio.ico.next}}' bindtap='next_tap'></image>
+  </view>
+</view>
