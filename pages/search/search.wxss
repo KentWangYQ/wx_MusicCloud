@@ -19,11 +19,17 @@
 .usermotto {
   margin-top: 200px;
 }
+.suggest-song-name{
+  color: #666666;
+  font-size: 14px;
+}
 .song-name{
   color: #507daf;
   font-size: 18px;
+  max-width: 80%;
 }
 .song-singer{
   color: #888888;
   font-size: 12px;
+  padding-left: 10px;
 }

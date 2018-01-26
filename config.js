@@ -1,8 +1,8 @@
 const config = {
-  "platform": [
-    {
+  "platform": {
+    "wangyi": {
       "name": "wangyiyunyinyue",
-      "server": "http://neteasemusic.leanapp.cn",
+      "server": "https://neteasemusic.leanapp.cn",
       "api": {
         "search": "/search",
         "searchSuggest": "/search/suggest",
@@ -16,6 +16,6 @@ const config = {
         "artistDesc": "/artist/desc"
       }
     }
-  ]
+  }
 }
 module.exports = config

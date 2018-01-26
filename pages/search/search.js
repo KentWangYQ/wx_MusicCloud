@@ -1,24 +1,17 @@
 // pages/search/search.js
+var config = require("../../config.js")
 var app = getApp()
 Page({
   data: {
     inputShowed: false,
     inputVal: "",
-    tabs: ["个性推荐", "歌单", "主播电台", "排行榜"],
-    activeIndex: 0,
-    sliderOffset: 0,
-    sliderLeft: 0,
-    imgUrls: [
-      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-    ],
     indicatorDots: true,
     autoplay: true,
     interval: 2000,
     duration: 1000,
     circular: true,
     //   歌曲搜索的结果
+    searchSuggest: [],
     searchReault: []
   },
   showInput: function () {
@@ -45,9 +38,11 @@ Page({
     });
     // let url = `http://localhost:3000/search?keywords=${e.detail.value}`
     wx.request({
-      url: 'http://neteasemusic.leanapp.cn/search',
+      url: config.platform.wangyi.server + config.platform.wangyi.api.searchSuggest,
       data: {
-        keywords: e.detail.value
+        keywords: e.detail.value,
+        limit: 10,
+        type: 1
       },
       method: 'GET',
       success: function (res) {
@@ -56,7 +51,49 @@ Page({
           return;
         }
         res.data.result.songs.forEach((song, index) => {
+          temp.push({
+            id: song.id,
+            name: song.name,
+            mp3Url: song.mp3Url,
+            picUrl: song.album.picUrl,
+            singer: song.artists[0].name
+          })
+          that.setData({
+            searchSuggest: temp
+          })
+        })
+        // 存入搜索的结果进缓存
+        wx.setStorage({
+          key: "searchSuggest",
+          data: temp
+        })
+      },
+      fail: function (res) {
+        // fail
+      },
+      complete: function (res) {
+        // complete
+      }
+    })
+  },
+  search:function(e){
+    let that=this
+    console.log(e.detail)
+    wx.request({
+      url: config.platform.wangyi.server+config.platform.wangyi.api.search,
+      data:{
+        keywords: e.currentTarget.dataset.name,
+        limit:10
+      },
+      method:'GET',
+      success: function (res) {
+        console.log(res.data)
 
+        let temp = []
+        if (!res.data.result.songs) {
+          return;
+        }
+        res.data.result.songs.forEach((song, index) => {
           temp.push({
             id: song.id,
             name: song.name,
@@ -67,44 +104,18 @@ Page({
           that.setData({
             searchReault: temp
           })
-
-
         })
-        // 存入搜索的结果进缓存
-        wx.setStorage({
-          key: "searchReault",
-          data: temp
-        })
+        that.hideInput()
       },
       fail: function (res) {
         // fail
       },
       complete: function (res) {
         // complete
-
       }
     })
   },
-  onShow: function () {
-    wx.hideLoading()
-  },
-  onLoad: function () {
-    var that = this;
-    wx.getSystemInfo({
-      success: function (res) {
-        that.setData({
-          sliderOffset: res.windowWidth / that.data.tabs.length * that.data.activeIndex
-        });
-      }
-    });
-  },
-  tabClick: function (e) {
-    this.setData({
-      sliderOffset: e.currentTarget.offsetLeft,
-      activeIndex: e.currentTarget.id
-    });
-  },
-  tonow: function (event) {
+  play: function (event) {
     let songData = {
       id: event.currentTarget.dataset.id,
       name: event.currentTarget.dataset.name,
@@ -114,8 +125,21 @@ Page({
     }
     // 将当前点击的歌曲保存在缓存中
     wx.setStorageSync('clickdata', songData)
-    wx.switchTab({
-      url: '../now/index'
-    })
+    // wx.switchTab({
+    //   url: '../play/play'
+    // })
+  },
+  onShow: function () {
+    wx.hideLoading()
+  },
+  onLoad: function () {
+    var that = this;
+    wx.getSystemInfo({
+      success: function (res) {
+        // that.setData({
+        //   sliderOffset: res.windowWidth / that.data.tabs.length * that.data.activeIndex
+        // });
+      }
+    });
   }
 });
