@@ -70,22 +70,23 @@ Page({
       },
       fail: function (res) {
         // fail
+        console.log(`error: ${res}`)
       },
       complete: function (res) {
         // complete
       }
     })
   },
-  search:function(e){
-    let that=this
+  search: function (e) {
+    let that = this
     console.log(e.detail)
     wx.request({
-      url: config.platform.wangyi.server+config.platform.wangyi.api.search,
-      data:{
+      url: config.platform.wangyi.server + config.platform.wangyi.api.search,
+      data: {
         keywords: e.currentTarget.dataset.name,
-        limit:10
+        limit: 10
       },
-      method:'GET',
+      method: 'GET',
       success: function (res) {
         console.log(res.data)
 

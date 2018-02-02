@@ -1,4 +1,5 @@
 /* pages/search/search.wxss */
+
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -19,17 +20,25 @@
 .usermotto {
   margin-top: 200px;
 }
-.suggest-song-name{
-  color: #666666;
+
+.suggest-song-name {
+  color: #666;
   font-size: 14px;
 }
-.song-name{
+
+.song-name {
   color: #507daf;
   font-size: 18px;
-  max-width: 80%;
+  width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  float: left;
 }
-.song-singer{
-  color: #888888;
+
+.song-singer {
+  color: #888;
   font-size: 12px;
   padding-left: 10px;
 }

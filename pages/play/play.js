@@ -82,27 +82,28 @@ Page({
           author: res.data.singer
         })
         // wx.getBackgroundAudioManager(res.data.mp3Url, res.data.name, res.data.picUrl);
-        var a= wx.getBackgroundAudioManager()
+        var a = wx.getBackgroundAudioManager()
 
-          a.title = res.data.name
-          a.coverImgUrl = res.data.picUrl
-          a.src = res.data.mp3Url
+        a.title = res.data.name
+        a.coverImgUrl = res.data.picUrl
+        // a.src = res.data.mp3Url
+        a.src = `http://music.163.com/song/media/outer/url?id=${res.data.id}.mp3`
         wx.hideLoading();
       })
-    // Common.getlyric(that.data.id)
-    //   .then((lyricArr) => {
-    //     console.log('lyricArr', lyricArr)
-    //     that.setData({
-    //       lyricArr: lyricArr
-    //     })
+    Common.getlyric(that.data.id)
+      .then((lyricArr) => {
+        console.log('lyricArr', lyricArr)
+        that.setData({
+          lyricArr: lyricArr
+        })
 
-    //     // let tempduration = Common.getMusicData().duration
-    //     // console.log('get bg success', tempduration)
-    //     // // 设置时长
-    //     // that.setData({
-    //     //   sumduration: tempduration
-    //     // })
-    //   })
+        let tempduration = Common.getMusicData().duration
+        console.log('get bg success', tempduration)
+        // 设置时长
+        that.setData({
+          sumduration: tempduration
+        })
+      })
   },
   audioPlay: function () {
     //背景音乐信息
