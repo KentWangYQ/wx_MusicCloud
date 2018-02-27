@@ -1,237 +1,269 @@
 // pages/play/play.js
-var Common = require('../../utils/common')
-
+var common = require('../../utils/common')
+var util = require('../../utils/util.js')
 var app = getApp()
 Page({
-  data: {
-    id: 436514312,
-    name: "成都",
-    src: "http://m2.music.126.net/7o5D4dA6271VktgawcbZFA==/18665309393829604.mp3",
-    poster: "http://p1.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg",
-    author: "赵雷",
-    isplaying: true,
-    islyric: false,
-    sumduration: 0,
-    lyricobj: {},
-    lyricArr: [],
-    isadd: false,
-    items: [
-      { name: 'recent', value: '最近' },
-      { name: 'like', value: '我的收藏' }
-    ],
-    percent: '100%'
-  },
-  addsong: function () {
-    this.setData({
-      percent: '0'
-    })
-  },
-  radioChange: function (e) {
-    console.log('radio发生change事件，携带value值为：', e.detail.value)
-    this.setData({
-      percent: '100%'
-    })
-  },
-  //事件处理函数
-  bindViewTap: function () {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
-  showCircle: function () {
-    this.setData({
-      islyric: true,
-      percent: '100%'
-    })
-  },
-  showlyric: function () {
-    this.setData({
-      islyric: false,
-      percent: '100%'
-    })
-  },
-  onLoad: function () {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
-    console.log('正在播放 onLoad')
-    // var that = this
-    // //调用应用实例的方法获取全局数据
-    // app.getUserInfo(function (userInfo) {
-    //   //更新数据
-    //   that.setData({
-    //     userInfo: userInfo
-    //   })
-    // }),
-    wx.setNavigationBarTitle({
-      title: '正在播放'
-    })
-  },
-  onShow: function () {
-    let that = this;
-    Common.getStorage('clickdata')//本地缓存
-      .then(res => {
-        // console.log(data)
-        if (!res.data) return;
-        that.setData({
-          id: res.data.id,
-          name: res.data.name,
-          src: res.data.mp3Url,
-          poster: res.data.picUrl,
-          author: res.data.singer
-        })
-        // wx.getBackgroundAudioManager(res.data.mp3Url, res.data.name, res.data.picUrl);
-        var a = wx.getBackgroundAudioManager()
-
-        a.title = res.data.name
-        a.coverImgUrl = res.data.picUrl
-        // a.src = res.data.mp3Url
-        a.src = `http://music.163.com/song/media/outer/url?id=${res.data.id}.mp3`
-        wx.hideLoading();
-      })
-    Common.getlyric(that.data.id)
-      .then((lyricArr) => {
-        console.log('lyricArr', lyricArr)
-        that.setData({
-          lyricArr: lyricArr
-        })
-
-        let tempduration = Common.getMusicData().duration
-        console.log('get bg success', tempduration)
-        // 设置时长
-        that.setData({
-          sumduration: tempduration
-        })
-      })
-  },
-  audioPlay: function () {
-    //背景音乐信息
-
-    wx.getBackgroundAudioPlayerState({
-      success: function (res) {
-        var status = res.status
-        var dataUrl = res.dataUrl
-        var currentPosition = res.currentPosition
-        var duration = res.duration
-        var downloadPercent = res.downloadPercent
-        wx.playBackgroundAudio({
-          dataUrl: dataUrl
-        })
-        wx.seekBackgroundAudio({
-          position: currentPosition
-        })
-
-      }
-    })
-    this.setData({
-      isplaying: true
-    })
-  },
-  audioPause: function () {
-    wx.pauseBackgroundAudio()
-    this.setData({
-      isplaying: false
-    })
-  },
-  audio14: function () {
-
-  },
-  audioStart: function () {
-
-  },
-  slider3change: function (e) {
-    sliderToseek(e, function (dataUrl, cal) {
-      wx.playBackgroundAudio({
-        dataUrl: dataUrl
-      })
-      wx.seekBackgroundAudio({
-        position: cal
-      })
-    })
-
-  },
-  prev: function () {
-    prevSong(this)
-  }
-})
-// 上一曲
-function prevSong(that) {
-  let id = that.data.id
-  console.log('id', id)
-  wx.getStorage({
-    key: 'searchReault',
-    success: function (res) {
-      console.log(res.data)
-      let currentSongIndex = res.data.findIndex((item) => {
-        return item.id == id;
-      })
-      console.log(currentSongIndex)
-      currentSongIndex--;
-      console.log(res.data[currentSongIndex])
-      wx.playBackgroundAudio({
-        dataUrl: res.data[currentSongIndex].mp3Url
-      })
-      wx.switchTab({
-        url: '../now/index'
-      })
-
-    }
-  })
-}
-//滑动 歌曲快进
-function sliderToseek(e, cb) {
-  wx.getBackgroundAudioPlayerState({
-    success: function (res) {
-      var dataUrl = res.dataUrl
-      var duration = res.duration
-      let val = e.detail.value
-      let cal = val * duration / 100
-      cb && cb(dataUrl, cal);
-    }
-  })
-}
-
-// 获取歌词
-function getlyric(id, cb) {
-  console.log('id:', id)
-  let url = `http://neteasemusic.leanapp.cn/lyric`
-  wx.request({
-    url: url,
     data: {
-      id: id
+        duration: 1,
+        durationStr: "00:00",
+        sumDuration: 0,
+        sumDurationStr: "00:00",
+        currentLyricIndex: 0,
+        isPlaying: false,
+        songList: [],
+        showSongList: '100%'
     },
-    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-    // header: {}, // 设置请求的 header
-    success: function (res) {
-      // success
 
-      if (!res.data.lrc.lyric) return false;
+    onLoad: function () {
+        wx.showLoading({
+            title: '加载中',
+            mask: true
+        })
+        this.initAudio()
 
-      let lyric = res.data.lrc.lyric
+        let that = this;
 
-      let timearr = lyric.split('[')
-      let obj = {}
-      let lyricArr = []
-      // seek 为键  歌词为value
-      timearr.forEach((item) => {
-        let key = parseInt(item.split(']')[0].split(':')[0]) * 60 + parseInt(item.split(']')[0].split(':')[1])
-        let val = item.split(']')[1]
+        // 从storage获取播放列表
+        this.getSongList()
 
-        obj[key] = val
-      })
-      for (let key in obj) {
-        // obj[key] = obj[key].split('\n')[0]
-        lyricArr.push(obj[key])
-      }
-      cb && cb(obj, lyricArr)
+        if (!app.globalData.playing) {
+            app.globalData.playing = this.data.songList[0]
+        }
     },
-    fail: function (res) {
-      // fail
+
+    onShow: function () {
+        if (!this.data.isPlaying) {
+            if (app.globalData.playing)
+                // 清除globalData.playing
+                app.globalData.playing = undefined
+
+            var song = app.globalData
+            // 添加到播放列表
+            that.add2SongList(song)
+            // 播放歌曲
+            that.play(song)
+
+            wx.hideLoading()
+        }
     },
-    complete: function (res) {
-      // complete
-    }
-  })
-}
-// ----------------------------------------------------
+
+    // song manage
+    initAudio: function () {
+        let that = this
+        var durationInterval = undefined,
+            lyricInterval = undefined
+        var bam = wx.getBackgroundAudioManager()
+
+        // 进入可播放状态
+        // 目前无法触发，貌似bug
+        bam.onCanplay(() => {
+        })
+
+        // 播放事件
+        bam.onPlay(() => {
+            this.setData({ isPlaying: true })
+            wx.setNavigationBarTitle({
+                title: '正在播放'
+            })
+            that.showDuration(durationInterval)
+            that.startLyricRoll(lyricInterval)
+        })
+
+        bam.onPause(() => {
+            this.setData({ isPlaying: false })
+            wx.setNavigationBarTitle({
+                title: '暂停播放'
+            })
+            that.stopDuration(durationInterval)
+            that.stopLyricRoll(lyricInterval)
+        })
+
+        bam.onStop(() => {
+            this.setData({ isPlaying: false })
+            wx.setNavigationBarTitle({
+                title: '停止播放'
+            })
+            that.stopDuration(durationInterval)
+            that.resetDuration()
+
+            that.stopLyricRoll(lyricInterval)
+            that.resetLyricRoll()
+        })
+
+        bam.onEnded(e => {
+            this.setData({ isPlaying: false })
+            wx.setNavigationBarTitle({
+                title: '播放结束'
+            })
+            that.stopDuration(durationInterval)
+            that.resetDuration()
+
+            that.stopLyricRoll(lyricInterval)
+            that.resetLyricRoll()
+
+            // 自动播放下一曲（默认随机）
+            that.next()
+        })
+
+        // 播放进度更新事件
+        bam.onTimeUpdate(() => {
+            // 设置总时长
+            // TODO: 设置一次后，不重复设置
+            that.showSumDuration()
+        })
+
+        bam.onPrev(() => {
+            this.randomPlay()
+        })
+
+        bam.onNext(() => {
+            this.randomPlay()
+        })
+
+        bam.onError(err => {
+            this.setData({ isPlaying: false })
+            console.log(err)
+
+            that.stopDuration(durationInterval)
+            that.resetDuration()
+
+            that.stopLyricRoll(lyricInterval)
+            that.resetLyricRoll()
+        })
+
+        bam.onWaiting(function () {
+
+        })
+    },
+
+    showDuration: function (durationInterval) {
+        let that = this
+        var bam = wx.getBackgroundAudioManager()
+        durationInterval = setInterval(function () {
+            that.setData({
+                duration: bam.currentTime,
+                durationStr: util.sec2Min(bam.currentTime)
+            })
+        }, 1000)
+    },
+    stopDuration: function (durationInterval) {
+        clearInterval(durationInterval)
+    },
+    resetDuration: function () {
+        this.setData({
+            duration: 0,
+            durationStr: "00:00"
+        })
+    },
+    showSumDuration: function () {
+        var bam = wx.getBackgroundAudioManager()
+        this.setData({
+            sumDuration: bam.duration,
+            sumDurationStr: util.sec2Min(bam.duration)
+        })
+    },
+    resetSumDuration: function () {
+        var bam = wx.getBackgroundAudioManager()
+        this.setData({
+            sumDuration: 0,
+            sumDurationStr: "00:00"
+        })
+    },
+
+    startLyricRoll: function (lyricInterval) {
+        let that = this
+
+        var bmp = wx.getBackgroundAudioManager()
+
+        let l = 0, r = 0
+        lyricInterval = setInterval(function () {
+            let curr = bmp.currentTime
+            if (!(curr >= l && curr < r)) {
+                let idx = that.data.song.lyric.findIndex(l => l.key > curr)
+                if (idx >= that.data.song.lyric.length - 1 || idx < 0) {
+                    idx = that.data.song.lyric.length
+                    clearInterval(lyricInterval)
+                } else {
+                    l = idx <= 0 ? 0 : that.data.song.lyric[idx - 1].key
+                    r = that.data.song.lyric[idx].key
+                }
+                that.setData({ currentLyricIndex: idx - 1 })
+            }
+        }, 500);
+    },
+    stopLyricRoll: function (lyricInterval) {
+        clearInterval(lyricInterval)
+    },
+    resetLyricRoll: function () {
+        this.setData({ currentLyricIndex: 0 })
+    },
+    prev: function () {
+        this.randomPlay();
+    },
+    next: function () {
+        this.randomPlay();
+    },
+    randomPlay: function () {
+        wx.getBackgroundAudioManager().stop()
+        var index = 0
+        if (!this.data.songList || this.data.songList.length <= 0) {
+            wx.showToast({
+                title: '您的播放列表中没有歌曲！',
+            })
+            return;
+        }
+        while (true) {
+            index = parseInt(Math.random() * (this.data.songList.length))
+            if (this.data.songList[index].id != this.data.song.id)
+                break
+        }
+        this.play(this.data.songList[index])
+    },
+
+    // audio control
+    audioPlay: function () {
+        if (!wx.getBackgroundAudioManager().src) {
+            // 播放结束时点击，则播放下一首
+            this.next()
+        } else {
+            //暂停时点击，则恢复播放
+            wx.getBackgroundAudioManager().play()
+            this.setData({
+                isPlaying: true
+            })
+        }
+    },
+    audioPause: function () {
+        wx.getBackgroundAudioManager().pause()
+        this.setData({
+            isPlaying: false
+        })
+    },
+    sliderChange: function (e) {
+        wx.getBackgroundAudioManager().seek(e.detail.value)
+        this.setData({
+            duration: e.detail.value,
+            durationStr: util.sec2Min(this.data.duration)
+        })
+    },
+
+    // song list
+    showSongList: function () {
+        this.setData({
+            showSongList: '0'
+        })
+    },
+    hideSongList: function () {
+        this.setData({
+            showSongList: '100%'
+        })
+    },
+    listPlay: function (e) {
+        this.play(this.data.songList[e.currentTarget.dataset.index])
+        this.hideSongList()
+    },
+    removeSong: function (e) {
+        this.removeFromSongList(e.currentTarget.dataset.index)
+    },
+    
+})

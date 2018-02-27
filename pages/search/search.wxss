@@ -7,9 +7,9 @@
 }
 
 .userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
+  width: 128rrpx;
+  height: 128rrpx;
+  margin: 20rrpx;
   border-radius: 50%;
 }
 
@@ -18,18 +18,18 @@
 }
 
 .usermotto {
-  margin-top: 200px;
+  margin-top: 200rpx;
 }
 
 .suggest-song-name {
   color: #666;
-  font-size: 14px;
+  font-size: 30rpx;
 }
 
 .song-name {
   color: #507daf;
-  font-size: 18px;
-  width: 70%;
+  /* font-size: 18rpx; */
+  width: 560rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -39,6 +39,12 @@
 
 .song-singer {
   color: #888;
-  font-size: 12px;
-  padding-left: 10px;
+  font-size: 20rpx;
+  padding-left: 10rpx;
+  width:100rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
 }

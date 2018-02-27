@@ -1,51 +1,61 @@
 <!--pages/play/play.wxml-->
 
-<view class="container" style=""  >
-<view class="bg" style=" background-image: url({{poster}});filter: blur(20px); position: absolute;left:0;top:0;right:0;bottom:0;opacity: 0.4;z-index: 0;"></view>
-  <!--歌曲圆圈信息-->
-  <view class="container-content">
-  <view class="fengmian" hidden="{{!islyric}}" bindtap="showlyric">
-    <view class="cicle-infor" style=" background-image: url({{poster}})">
-    </view>
-  </view>
-  <!--歌词-->
-<view class="lyric-content" hidden="{{islyric}}" style="height:401px; overflow-y: scroll;" bindtap="showCircle">
-  <view class="lyric"  style="overflow-y: scroll;">
-      <block wx:for="{{lyricArr}}" >
-        <view> {{item}} </view>
-      </block>
-    </view>
-</view>
+<view class="container" style="">
+    <view class="bg" style="background-image: url({{song.poster}});"></view>
 
-  <!--选择操作-->
-  <view class="other-content">
-    <view class="icon-choose">
-      <view class="download icon"></view>
-      <view class="like icon"></view>
-      <view class="add icon" bindtap="addsong"></view>
-    </view>
-    <!--滑动条-->
-    <view class="slider">
-      <view class="section section_gap">
-        <view class="body-view">
-          <slider bindchange="slider3change" show-value activeColor="#D43C33" />
+    <view class="container-content">
+        <!-- 名称&&歌手 -->
+        <view style="font-size:40rpx;color:#555;padding:20rpx 0 10rpx 0">
+            <text>{{song.name}}</text>
         </view>
-      </view>
+        <view style="font-size:24rpx;color:#555;padding:0 0 20rpx 0">
+            <text>—— {{song.singer}} ——</text>
+        </view>
+        <!--歌词-->
+        <scroll-view class="lyric" scroll-y="true" scroll-with-animation="true" scroll-into-view="l_{{currentLyricIndex<7?0:(currentLyricIndex-7) }}">
+            <view wx:for="{{song.lyric}}" wx:key="{{song.lyric.key}}" id="l_{{index}}" style="{{index==currentLyricIndex?'color:#00B2EE':''}}"> {{item.value}} </view>
+        </scroll-view>
+
+        <!--选择操作-->
+        <view class="other-content">
+            <view class="icon-choose">
+                <view class="download icon"></view>
+                <view class="like icon"></view>
+                <view class="add icon" bindtap="showSongList"></view>
+            </view>
+            <!--滑动条-->
+            <view class="slider">
+                <view class="section section_gap">
+                    <view class="body-view">
+                        <text style='float:left; width:10%;padding:16rpx 0 0 20rpx'>{{durationStr}} </text>
+                        <slider bindchange="sliderChange" max='{{sumDuration}}' value='{{duration}}' color="#ccc" activeColor="#00B2EE" block-size="18" style='float:left; width:60%' />
+                        <text style='float:left; width:10%;padding:16rpx 20rpx 0 0'>{{sumDurationStr}}</text>
+                    </view>
+                </view>
+            </view>
+            <!--上一曲 下一曲操作-->
+            <view class="operations" style='clear:both'>
+                <view class="prev btn" bindtap="prev"></view>
+                <view class="play btn" bindtap="audioPlay" hidden="{{isplaying}}"></view>
+                <view class="pause btn" bindtap="audioPause" hidden="{{!isplaying}}"></view>
+                <view class="next btn" bindtap="next"></view>
+            </view>
+        </view>
     </view>
-    <!--上一曲 下一曲操作-->
-    <view class="operations">
-      <view class="prev btn" bindtap="prev"></view>
-      <view class="play btn" bindtap="audioPlay" hidden="{{isplaying}}"></view>
-      <view class="pause btn" bindtap="audioPause" hidden="{{!isplaying}}"></view>
-      <view class="next btn" bindtap="next"></view>
+    <view class="lists" style="transform: translateY({{showSongList}})">
+        <view style="height:60rpx;">
+            <icon type="clear" style="float:right;padding:15rpx 15rpx 0 0;" bindtap="hideSongList"></icon>
+        </view>
+        <block wx:for="{{songList}}" wx:key="id" style="overflow-y: scroll;">
+            <view class="weui-cell">
+                <view bindtap="listPlay" data-index="{{index}}">
+                    <text class="song-name">{{item.name}}</text>
+                    <text class="song-singer">{{item.singer}}</text>
+                </view>
+                <view>
+                    <image src="../../image/del.png" style="width:60rpx;height:60rpx;float:right" data-index="{{index}}" bindtap="removeSong"></image>
+                </view>
+            </view>
+        </block>
     </view>
-  </view>
-  </view>
-  <view class="lists"  style="transform: translateY({{percent}})">
-    <radio-group class="radio-group" bindchange="radioChange">
-  <label class="radio" wx:for="{{items}}" >
-    <radio value="{{item.name}}" checked="{{item.checked}}"/>{{item.value}}
-  </label>
-</radio-group> 
-  </view>
 </view>

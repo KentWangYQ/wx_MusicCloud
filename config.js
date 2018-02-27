@@ -5,7 +5,7 @@ const config = {
       "server": "https://neteasemusic.leanapp.cn",
       "api": {
         "search": "/search",
-        "searchSuggest": "/search",
+        "searchSuggest": "/search/suggest",
         "searchMultimatch": "/search/multimatch",
         "music": "/music/url",
         "songDetail": "/song/detail",

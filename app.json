@@ -1,34 +1,35 @@
 {
-  "pages": [
-    "pages/play/play",
-    "pages/search/search",
-    "pages/favo/favo",
-    "pages/kuwo/kuwo"
-  ],
-  "window": {
-    "backgroundColor": "#555555",
-    "navigationBarBackgroundColor": "#555555",
-    "navigationBarTitleText": "音乐魔盒"
-  },
-  "tabBar": {
-    "list": [
-      {
-        "pagePath": "pages/favo/favo",
-        "text": "收藏",
-        "iconPath": "image/qqmusic.jpg",
-        "selectedIconPath": "image/qqmusic.jpg"
-      },
-      {
-        "pagePath": "pages/kuwo/kuwo",
-        "text": "kuwo",
-        "iconPath": "image/kuwo.jpg",
-        "selectedIconPath": "image/kuwo.jpg"
-      }
-    ]
-  },
-  "networkTimeout": {
-    "request": 10000,
-    "downloadFile": 10000
-  },
-  "debug": true
+    "pages": [
+        "pages/search/search",
+        "pages/play/play"
+    ],
+    "window": {
+        "backgroundColor": "#555555",
+        "navigationBarBackgroundColor": "#4D4D4D",
+        "navigationBarTitleText": "小音乐"
+    },
+    "tabBar": {
+        "color": "#CCC",
+        "selectedColor":"#00EE00",
+        "backgroundColor": "#4D4D4D",
+        "list": [
+            {
+                "pagePath": "pages/search/search",
+                "text": "Search",
+                "iconPath": "image/search-1.png",
+                "selectedIconPath": "image/search-2.png"
+            },
+            {
+                "pagePath": "pages/play/play",
+                "text": "Play",
+                "iconPath": "image/singer-1.png",
+                "selectedIconPath": "image/singer-2.png"
+            }
+        ]
+    },
+    "networkTimeout": {
+        "request": 10000,
+        "downloadFile": 10000
+    },
+    "debug": true
 }
